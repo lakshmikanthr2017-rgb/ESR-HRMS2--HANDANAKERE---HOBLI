@@ -1,0 +1,1592 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Karnataka HRMS 2.0 - e-Service Register (ESR)</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: #eef2f6;
+      color: #0f172a;
+    }
+    .top-header {
+      background: linear-gradient(135deg, #7f1d1d, #991b1b 55%, #7c2d12);
+      color: #ffffff;
+      padding: 14px 16px;
+      text-align: center;
+      border-bottom: 3px solid #f59e0b;
+    }
+    .board-title {
+      font-size: 1.15rem;
+      font-weight: 800;
+      margin: 0;
+      line-height: 1.35;
+    }
+    .board-subtitle {
+      font-size: 0.85rem;
+      font-weight: 700;
+      margin-top: 5px;
+      color: #fef3c7;
+      line-height: 1.3;
+    }
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      padding: 8px 12px;
+      background: #e2e8f0;
+      border-bottom: 1px solid #cbd5e1;
+      align-items: center;
+      justify-content: center;
+    }
+    .notice-strip {
+      max-width: 1120px;
+      margin: 10px auto 0;
+      padding: 10px 14px;
+      background: #eff6ff;
+      border-left: 4px solid #1d4ed8;
+      border-radius: 4px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: #1e3a8a;
+    }
+    .tab-bar {
+      max-width: 1120px;
+      margin: 10px auto 0;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      padding: 0 12px;
+    }
+    .tab-btn {
+      padding: 7px 11px;
+      border: 1px solid #94a3b8;
+      background: #ffffff;
+      color: #0f172a;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: 700;
+      font-size: 0.8rem;
+    }
+    .tab-btn.active {
+      background: #1d4ed8;
+      color: #ffffff;
+      border-color: #1d4ed8;
+    }
+    .container {
+      max-width: 1120px;
+      margin: 10px auto 76px;
+      padding: 0 12px;
+    }
+    .section-panel {
+      display: none;
+      background: #ffffff;
+      border: 1px solid #cbd5e1;
+      border-radius: 6px;
+      padding: 14px;
+      margin-bottom: 14px;
+    }
+    .section-panel.active {
+      display: block;
+    }
+    .part-banner {
+      background: #1d4ed8;
+      color: #ffffff;
+      padding: 7px 10px;
+      font-size: 0.88rem;
+      font-weight: 800;
+      border-radius: 4px 4px 0 0;
+      margin-bottom: 8px;
+    }
+    table.esr-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 12px;
+    }
+    table.esr-table td, table.esr-table th {
+      border: 1px solid #cbd5e1;
+      padding: 6px 8px;
+      vertical-align: middle;
+    }
+    table.esr-table th {
+      background: #f1f5f9;
+      font-size: 0.82rem;
+      text-align: left;
+    }
+    .field-label {
+      font-weight: 700;
+      font-size: 0.82rem;
+      color: #1e293b;
+    }
+    input[type="text"],
+    input[type="date"],
+    input[type="email"],
+    input[type="tel"],
+    input[type="password"],
+    select {
+      width: 100%;
+      padding: 6px 8px;
+      border: 1px solid #94a3b8;
+      border-radius: 4px;
+      font-size: 0.86rem;
+      font-weight: 700;
+      color: #0f172a;
+      background: #ffffff;
+    }
+    .kn-input {
+      font-weight: 700;
+      color: #0f172a;
+    }
+    .btn {
+      padding: 6px 11px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: 700;
+      font-size: 0.8rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      text-decoration: none;
+    }
+    .btn-sm { padding: 5px 9px; font-size: 0.78rem; }
+    .btn-primary { background: #2563eb; color: #fff; }
+    .btn-success { background: #15803d; color: #fff; }
+    .btn-danger { background: #dc2626; color: #fff; }
+    .btn-dark { background: #334155; color: #fff; }
+    .btn-amber { background: #d97706; color: #fff; }
+    .repeat-item {
+      border: 1px solid #cbd5e1;
+      border-radius: 6px;
+      padding: 8px;
+      margin-bottom: 8px;
+      background: #f8fafc;
+    }
+    .repeat-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-weight: 700;
+      font-size: 0.84rem;
+      margin-bottom: 6px;
+    }
+    .photo-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+    .photo-card {
+      border: 1px solid #cbd5e1;
+      border-radius: 6px;
+      padding: 10px;
+      background: #f8fafc;
+    }
+    .photo-preview {
+      width: 100px;
+      height: 120px;
+      border: 1px dashed #94a3b8;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      background: #fff;
+      margin: 8px 0;
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: #64748b;
+    }
+    .photo-preview img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .badge-kb {
+      display: inline-block;
+      background: #dcfce7;
+      color: #166534;
+      border: 1px solid #86efac;
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      margin-top: 6px;
+    }
+    /* Balanced Camera Modal so Capture Button is Always Easily Reachable */
+    #cameraModal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 99999;
+      background: rgba(15, 23, 42, 0.92);
+      padding: 12px;
+      overflow-y: auto;
+      align-items: center;
+      justify-content: center;
+    }
+    #cameraModal.open {
+      display: flex;
+    }
+    .camera-box {
+      width: 100%;
+      max-width: 680px;
+      background: #0f172a;
+      border: 2px solid #475569;
+      border-radius: 10px;
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    #cameraStream {
+      width: 100%;
+      height: 54vh;
+      max-height: 420px;
+      min-height: 240px;
+      object-fit: contain;
+      background: #000000;
+      border-radius: 6px;
+    }
+    .camera-controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: center;
+      align-items: center;
+    }
+    @keyframes footerGlow {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    .banner-footer {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: linear-gradient(270deg, #0f172a, #1e3a8a, #7f1d1d, #0f172a);
+      background-size: 300% 300%;
+      animation: footerGlow 8s ease infinite;
+      color: #ffffff;
+      text-align: center;
+      padding: 7px 10px;
+      font-size: 0.78rem;
+      font-weight: 800;
+      z-index: 999;
+      border-top: 2px solid #f59e0b;
+    }
+    @media print {
+      .toolbar,
+      .tab-bar,
+      .notice-strip,
+      .banner-footer,
+      .no-print,
+      #cameraModal,
+      #settingsBox,
+      #adminLockedBox,
+      #adminUnlockedBox {
+        display: none !important;
+      }
+      body {
+        background: #ffffff;
+      }
+      .container {
+        margin: 0;
+        max-width: 100%;
+        padding: 0;
+      }
+      .section-panel {
+        display: block !important;
+        border: none;
+        padding: 6px 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="top-header">
+    <div class="board-title" contenteditable="true">ಕ್ಷೇತ್ರ ಶಿಕ್ಷಣಾಧಿಕಾರಿಗಳ ಕಾರ್ಯಾಲಯ ಚಿಕ್ಕನಾಯಕನಹಳ್ಳಿ ತಾಲ್ಲೂಕು ತುಮಕೂರು ಜಿಲ್ಲೆ</div>
+    <div class="board-subtitle" contenteditable="true">KARNATAKA HRMS 2.0 - COMPLETE 17-PAGE e-SERVICE REGISTER (ESR) PORTAL (ನಮೂನೆ)</div>
+  </header>
+
+  <div class="toolbar">
+    <button type="button" class="btn btn-success btn-sm" onclick="saveLocalDraft()">Save Draft</button>
+    <button type="button" class="btn btn-amber btn-sm" onclick="downloadEmployeePDF()">Download PDF</button>
+    <button type="button" class="btn btn-dark btn-sm" onclick="downloadEmployeeExcel()">Download Excel (.xls)</button>
+    <button type="button" class="btn btn-primary btn-sm" onclick="openAdminPanel()">Admin</button>
+    <button type="button" id="btnCloudSubmit" class="btn btn-primary btn-sm" onclick="submitToGoogleSheet()">Submit Data</button>
+    <button type="button" class="btn btn-dark btn-sm" onclick="toggleSettingsBox()">Setup Link</button>
+    <button type="button" class="btn btn-danger btn-sm" onclick="clearAllData()">Clear</button>
+  </div>
+
+  <div class="notice-strip">
+    ಸೂಚನೆ: Fill ESR fields in English — Name &amp; Address fields translate/transliterate into ಕನ್ನಡ (Kannada) in the next column and can be edited directly. Employees can Download PDF or Excel of their filled form, while Admin can view records and download data &amp; photos.
+  </div>
+
+  <div id="settingsBox" class="section-panel" style="max-width:1120px;margin:10px auto;">
+    <div class="part-banner">Portal &amp; Cloud Settings</div>
+    <table class="esr-table">
+      <tr>
+        <th style="width:35%;">Google Apps Script Web App URL</th>
+        <td><input type="text" id="gasUrlInput" placeholder="https://script.google.com/macros/s/.../exec" /></td>
+      </tr>
+      <tr>
+        <th>Admin PIN</th>
+        <td><input type="password" id="adminPinInput" placeholder="2026" /></td>
+      </tr>
+    </table>
+    <button type="button" class="btn btn-primary btn-sm" onclick="saveSettings()">Save Settings</button>
+  </div>
+
+  <div class="tab-bar">
+    <button type="button" class="tab-btn active" onclick="openTab('part1a', this)">Part I (A): Personal &amp; Father</button>
+    <button type="button" class="tab-btn" onclick="openTab('part1bc', this)">Part I (B &amp; C): Spouse &amp; Address</button>
+    <button type="button" class="tab-btn" onclick="openTab('part2', this)">Part II: Education, Exam, Family &amp; Nominee</button>
+    <button type="button" class="tab-btn" onclick="openTab('part4a', this)">Part IV (1–4): Appointment, Pay &amp; Service</button>
+    <button type="button" class="tab-btn" onclick="openTab('panel-upload-docs', this)">Photos, Docs &amp; Export</button>
+  </div>
+
+  <div class="container">
+    <form id="esrForm" onsubmit="event.preventDefault();">
+      <!-- Part I (A) -->
+      <div id="part1a" class="section-panel active">
+        <div class="part-banner">PART I - A: PERSONAL INFORMATION (ವೈಯಕ್ತಿಕ ಮಾಹಿತಿ)</div>
+        <table class="esr-table">
+          <tr>
+            <th style="width:34%;">Particulars / ವಿವರಗಳು</th>
+            <th style="width:33%;">English (Data Entry)</th>
+            <th style="width:33%;">ಕನ್ನಡ (Auto-Translated &amp; Editable)</th>
+          </tr>
+          <tr>
+            <td><span class="field-label">KGID / Employee ID</span></td>
+            <td><input type="text" name="kgid_no" placeholder="KGID / Employee ID" /></td>
+            <td><input type="text" name="kgid_no_kn" class="kn-input" placeholder="KGID ಸಂಖ್ಯೆ" /></td>
+          </tr>
+          <tr>
+            <td><span class="field-label">1. Name of the Government Servant*</span></td>
+            <td><input type="text" name="emp_name_en" data-kn-target="emp_name_kn" oninput="handleTransliterate(this)" placeholder="Full Name in English" required /></td>
+            <td><input type="text" name="emp_name_kn" class="kn-input" placeholder="ಪೂರ್ಣ ಹೆಸರು (ಕನ್ನಡ)" /></td>
+          </tr>
+          <tr>
+            <td><span class="field-label">2(i). Present Address*</span></td>
+            <td><input type="text" name="pres_addr_en" data-kn-target="pres_addr_kn" oninput="handleTransliterate(this)" placeholder="House / Street / Village" /></td>
+            <td><input type="text" name="pres_addr_kn" class="kn-input" placeholder="ಪ್ರಸ್ತುತ ವಿಳಾಸ (ಕನ್ನಡ)" /></td>
+          </tr>
+          <tr>
+            <td><span class="field-label">2(ii). Revenue District &amp; Taluk*</span></td>
+            <td><input type="text" name="pres_dist_taluk_en" data-kn-target="pres_dist_taluk_kn" oninput="handleTransliterate(this)" placeholder="District, Taluk, Pincode" /></td>
+            <td><input type="text" name="pres_dist_taluk_kn" class="kn-input" placeholder="ಜಿಲ್ಲೆ, ತಾಲ್ಲೂಕು, ಪಿನ್‌ಕೋಡ್" /></td>
+          </tr>
+          <tr>
+            <td><span class="field-label">2(iii). Mobile Number &amp; Email*</span></td>
+            <td><input type="tel" name="mobile_no" placeholder="10-digit Mobile Number" /></td>
+            <td><input type="email" name="email_id" placeholder="Email ID" /></td>
+          </tr>
+          <tr>
+            <td><span class="field-label">3. Father's Full Name*</span></td>
+            <td><input type="text" name="father_name_en" data-kn-target="father_name_kn" oninput="handleTransliterate(this)" placeholder="Father Name in English" /></td>
+            <td><input type="text" name="father_name_kn" class="kn-input" placeholder="ತಂದೆಯ ಹೆಸರು (ಕನ್ನಡ)" /></td>
+          </tr>
+          <tr>
+            <td><span class="field-label">4. Father's Address*</span></td>
+            <td><input type="text" name="father_addr_en" data-kn-target="father_addr_kn" oninput="handleTransliterate(this)" placeholder="Father Address" /></td>
+            <td><input type="text" name="father_addr_kn" class="kn-input" placeholder="ತಂದೆಯ ವಿಳಾಸ (ಕನ್ನಡ)" /></td>
+          </tr>
+          <tr>
+            <td><span class="field-label">5(i). Gender &amp; Religion*</span></td>
+            <td>
+              <select name="gender">
+                <option value="">-- Select Gender --</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+                <option value="Other">Other</option>
+              </select>
+            </td>
+            <td><input type="text" name="religion_kn" data-kn-target="religion_kn" oninput="handleTransliterate(this)" class="kn-input" placeholder="ಧರ್ಮ / Religion" /></td>
+          </tr>
+          <tr>
+            <td><span class="field-label">5(ii). Date of Birth &amp; Words*</span></td>
+            <td><input type="date" name="dob" onchange="autoFillDobWords(this.value)" /></td>
+            <td><input type="text" name="dob_words" placeholder="DOB in Words" /></td>
+          </tr>
+          <tr>
+            <td><span class="field-label">5(iii). Social Category &amp; Caste*</span></td>
+            <td><input type="text" name="social_category" placeholder="GM / SC / ST / Cat-I / 2A / 2B / 3A / 3B" /></td>
+            <td><input type="text" name="caste_kn" class="kn-input" placeholder="ಜಾತಿ (ಕನ್ನಡ)" /></td>
+          </tr>
+          <tr>
+            <td><span class="field-label">6. Identification Marks*</span></td>
+            <td><input type="text" name="id_mark_1" data-kn-target="id_mark_1_kn" oninput="handleTransliterate(this)" placeholder="Identification Mark 1" /></td>
+            <td><input type="text" name="id_mark_1_kn" class="kn-input" placeholder="ಗುರುತಿನ ಚಿಹ್ನೆ (ಕನ್ನಡ)" /></td>
+          </tr>
+        </table>
+      </div>
+
+      <!-- Part I (B & C) -->
+      <div id="part1bc" class="section-panel">
+        <div class="part-banner">PART I - B &amp; C: SPOUSE, PERMANENT ADDRESS &amp; ID DETAILS</div>
+        <table class="esr-table">
+          <tr>
+            <th style="width:34%;">Particulars / ವಿವರಗಳು</th>
+            <th style="width:33%;">English (Data Entry)</th>
+            <th style="width:33%;">ಕನ್ನಡ (Auto-Translated &amp; Editable)</th>
+          </tr>
+          <tr>
+            <td><span class="field-label">Spouse Name (if applicable)</span></td>
+            <td><input type="text" name="spouse_name_en" data-kn-target="spouse_name_kn" oninput="handleTransliterate(this)" placeholder="Spouse Name" /></td>
+            <td><input type="text" name="spouse_name_kn" class="kn-input" placeholder="ಸಂಗಾತಿಯ ಹೆಸರು (ಕನ್ನಡ)" /></td>
+          </tr>
+          <tr>
+            <td><span class="field-label">Permanent Address*</span></td>
+            <td><input type="text" name="perm_addr_en" data-kn-target="perm_addr_kn" oninput="handleTransliterate(this)" placeholder="Permanent Address" /></td>
+            <td><input type="text" name="perm_addr_kn" class="kn-input" placeholder="ಶಾಶ್ವತ ವಿಳಾಸ (ಕನ್ನಡ)" /></td>
+          </tr>
+          <tr>
+            <td><span class="field-label">PAN Number &amp; PRAN / NPS</span></td>
+            <td><input type="text" name="pan_no" placeholder="PAN Number" /></td>
+            <td><input type="text" name="pran_no" placeholder="PRAN / NPS Number" /></td>
+          </tr>
+          <tr>
+            <td><span class="field-label">Office / School Name*</span></td>
+            <td><input type="text" name="office_name_en" data-kn-target="office_name_kn" oninput="handleTransliterate(this)" placeholder="School / Office Name" /></td>
+            <td><input type="text" name="office_name_kn" class="kn-input" placeholder="ಶಾಲೆ / ಕಚೇರಿ ಹೆಸರು (ಕನ್ನಡ)" /></td>
+          </tr>
+        </table>
+      </div>
+
+      <!-- Part II -->
+      <div id="part2" class="section-panel">
+        <div class="part-banner">PART II: EDUCATION, EXAMINATIONS, FAMILY &amp; NOMINATION</div>
+        <div id="eduContainer"></div>
+        <button type="button" class="btn btn-primary btn-sm no-print" onclick="addEduRow()">+ Add Qualification</button>
+
+        <div class="part-banner" style="margin-top:14px;">Departmental Exams / Trainings</div>
+        <div id="examContainer"></div>
+        <button type="button" class="btn btn-primary btn-sm no-print" onclick="addExamRow()">+ Add Exam / Training</button>
+
+        <div class="part-banner" style="margin-top:14px;">Family Members</div>
+        <div id="familyContainer"></div>
+        <button type="button" class="btn btn-primary btn-sm no-print" onclick="addFamilyRow()">+ Add Family Member</button>
+
+        <div class="part-banner" style="margin-top:14px;">Nominations</div>
+        <div id="nomineeContainer"></div>
+        <button type="button" class="btn btn-primary btn-sm no-print" onclick="addNomineeRow()">+ Add Nomination</button>
+      </div>
+
+      <!-- Part IV (1-4) -->
+      <div id="part4a" class="section-panel">
+        <div class="part-banner">PART IV (1–4): APPOINTMENT, PAY SCALE &amp; SERVICE RECORD</div>
+        <table class="esr-table">
+          <tr>
+            <th style="width:34%;">Particulars</th>
+            <th style="width:66%;">Details</th>
+          </tr>
+          <tr>
+            <td><span class="field-label">Date of Initial Appointment</span></td>
+            <td><input type="date" name="doj_service" /></td>
+          </tr>
+          <tr>
+            <td><span class="field-label">Designation &amp; Current Pay Scale / Basic</span></td>
+            <td><input type="text" name="payscale_basic" placeholder="Designation, Pay Scale & Basic Pay" /></td>
+          </tr>
+        </table>
+        <div id="promoContainer"></div>
+        <button type="button" class="btn btn-primary btn-sm no-print" onclick="addPromoRow()">+ Add Service / Pay Record</button>
+      </div>
+
+      <!-- Photos, Documents & Export Tab -->
+      <div id="panel-upload-docs" class="section-panel">
+        <div class="part-banner">PHOTOS, DOCUMENTS CAPTURE / UPLOAD &amp; DOWNLOADS</div>
+        <div class="photo-grid">
+          <div class="photo-card">
+            <span class="field-label">Employee Photo (&le;100 KB)</span>
+            <div id="empPhotoPreview" class="photo-preview">No Photo</div>
+            <div style="display:flex;flex-wrap:wrap;gap:6px;">
+              <input type="file" accept="image/*" onchange="processImageFile(event, 'emp')" />
+              <button type="button" class="btn btn-primary btn-sm" onclick="openCamera('emp', 'user')">Front Cam</button>
+              <button type="button" class="btn btn-dark btn-sm" onclick="openCamera('emp', 'environment')">Rear Cam</button>
+            </div>
+            <span id="empPhotoMeta" class="badge-kb" style="display:none;"></span>
+          </div>
+
+          <div class="photo-card">
+            <span class="field-label">Family Photo (&le;100 KB)</span>
+            <div id="famPhotoPreview" class="photo-preview">No Photo</div>
+            <div style="display:flex;flex-wrap:wrap;gap:6px;">
+              <input type="file" accept="image/*" onchange="processImageFile(event, 'fam')" />
+              <button type="button" class="btn btn-primary btn-sm" onclick="openCamera('fam', 'environment')">Rear Cam</button>
+              <button type="button" class="btn btn-dark btn-sm" onclick="openCamera('fam', 'user')">Front Cam</button>
+            </div>
+            <span id="famPhotoMeta" class="badge-kb" style="display:none;"></span>
+          </div>
+        </div>
+
+        <table class="esr-table">
+          <tr>
+            <td>
+              <span class="field-label">SSLC Certificate</span>
+              <input type="file" accept="image/*,.pdf" onchange="handleDocUpload(event, 'sslc_doc')" />
+              <div style="display:flex;gap:6px;margin-top:6px;">
+                <button type="button" class="btn btn-primary btn-sm" onclick="openCamera('sslc_doc', 'environment')">Rear Cam</button>
+                <button type="button" class="btn btn-dark btn-sm" onclick="openCamera('sslc_doc', 'user')">Front Cam</button>
+              </div>
+              <span id="meta_sslc_doc" class="badge-kb" style="display:none;"></span>
+            </td>
+            <td>
+              <span class="field-label">PUC Certificate</span>
+              <input type="file" accept="image/*,.pdf" onchange="handleDocUpload(event, 'puc_doc')" />
+              <div style="display:flex;gap:6px;margin-top:6px;">
+                <button type="button" class="btn btn-primary btn-sm" onclick="openCamera('puc_doc', 'environment')">Rear Cam</button>
+                <button type="button" class="btn btn-dark btn-sm" onclick="openCamera('puc_doc', 'user')">Front Cam</button>
+              </div>
+              <span id="meta_puc_doc" class="badge-kb" style="display:none;"></span>
+            </td>
+            <td>
+              <span class="field-label">Degree / D.Ed / B.Ed Certificate</span>
+              <input type="file" accept="image/*,.pdf" onchange="handleDocUpload(event, 'degree_doc')" />
+              <div style="display:flex;gap:6px;margin-top:6px;">
+                <button type="button" class="btn btn-primary btn-sm" onclick="openCamera('degree_doc', 'environment')">Rear Cam</button>
+                <button type="button" class="btn btn-dark btn-sm" onclick="openCamera('degree_doc', 'user')">Front Cam</button>
+              </div>
+              <span id="meta_degree_doc" class="badge-kb" style="display:none;"></span>
+            </td>
+          </tr>
+        </table>
+
+        <div id="otherDocsList"></div>
+        <button type="button" class="btn btn-primary btn-sm no-print" onclick="addOtherDocSlot()">+ Add Other Document</button>
+
+        <div id="photoDownloadCards" style="display:flex;flex-wrap:wrap;gap:10px;margin-top:12px;"></div>
+
+        <div id="adminLockedBox" style="margin-top:14px;padding:10px;background:#f8fafc;border:1px solid #cbd5e1;border-radius:6px;">
+          <button type="button" class="btn btn-dark btn-sm" onclick="unlockAdminView()">Unlock Admin View</button>
+        </div>
+
+        <div id="adminUnlockedBox" style="display:none;margin-top:14px;padding:10px;background:#f8fafc;border:1px solid #cbd5e1;border-radius:6px;">
+          <div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center;">
+            <button type="button" class="btn btn-success btn-sm" onclick="saveCurrentToAllEmployees()">Save Current to List</button>
+            <button type="button" class="btn btn-primary btn-sm" onclick="downloadAllEmployeesCSV()">Download All Employees (.xls)</button>
+            <span id="allEmployeesSummary" style="font-weight:700;font-size:0.82rem;"></span>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <!-- Camera Modal with Medium/Balanced Height & Clear Capture Buttons -->
+  <div id="cameraModal">
+    <div class="camera-box">
+      <video id="cameraStream" autoplay playsinline></video>
+      <div class="camera-controls">
+        <button type="button" id="camSwitchBtn" class="btn btn-primary btn-sm" onclick="switchCameraFacing()">Switch Front / Rear</button>
+        <button type="button" class="btn btn-success btn-sm" onclick="snapCameraPhoto()">Capture Photo</button>
+        <button type="button" class="btn btn-danger btn-sm" onclick="closeCamera()">Close Camera</button>
+      </div>
+    </div>
+  </div>
+
+  <footer class="banner-footer">
+    Designed by: LAKSHMIKANTH R | Coordination: VENKATARAMANAIAH, PRESIDENT KSTA, CHIKKANAYAKANAHALLI TALUK, TUMKUR DISTRICT[span_1](start_span)[span_1](end_span)
+  </footer>
+
+  <script>
+    const DEFAULT_GAS_URL = "https://script.google.com/macros/s/AKfycbwHlm1Wac4s8a49jz_zZIdxdi5TfWqsRE_mfl8B3LtBjHxfJ88UHZMTlreeSxw61EIdtg/exec";
+
+    let photoStore = { emp: "", fam: "" };
+    let docStore = { sslc_doc: null, puc_doc: null, degree_doc: null, other_docs: [] };
+    let activeCamTarget = "emp";
+    let activeCamFacing = "user";
+    let mediaStream = null;
+    let translitTimers = {};
+    let adminUnlocked = false;
+
+    // Part IV (5-13) tab removed
+    const TAB_PANEL_MAP = {
+      "part1a": 0,
+      "part1bc": 1,
+      "part2": 2,
+      "part4a": 3,
+      "panel-upload-docs": 4
+    };
+
+    function getActiveGasUrl() {
+      return (localStorage.getItem("esr_gas_url") || DEFAULT_GAS_URL || "").trim();
+    }
+
+    function getAdminPin() {
+      return localStorage.getItem("esr_admin_pin") || "2026";
+    }
+
+    function toggleSettingsBox() {
+      const box = document.getElementById("settingsBox");
+      if (!box) return;
+      box.style.display = box.style.display === "block" ? "none" : "block";
+    }
+
+    function escapeXml(str) {
+      return String(str ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&apos;");
+    }
+
+    function formatFieldLabel(key) {
+      return key
+        .replace(/\[\]$/, "")
+        .replace(/_/g, " ")
+        .replace(/\b\w/g, (ch) => ch.toUpperCase());
+    }
+
+    function sanitizeFilePart(str, fallback = "NA") {
+      const cleaned = String(str || "")
+        .trim()
+        .replace(/[^a-zA-Z0-9\u0C80-\u0CFF_-]+/g, "_")
+        .replace(/^_+|_+$/g, "");
+      return cleaned || fallback;
+    }
+
+    function getEmployeeFileBaseName(data = null) {
+      const rec = data || collectFormData();
+      const empName = sanitizeFilePart(rec.emp_name_en || rec.emp_name_kn || "Employee", "Employee");
+      const kgid = sanitizeFilePart(rec.kgid_no || "NoKGID", "NoKGID");
+      return `${empName}_${kgid}`;
+    }
+
+    function removePart4bTabIfPresent() {
+      const panel4b = document.getElementById("part4b");
+      if (panel4b) panel4b.remove();
+
+      document.querySelectorAll(".tab-btn").forEach((btn) => {
+        const txt = (btn.textContent || "").toLowerCase();
+        const onclickAttr = btn.getAttribute("onclick") || "";
+        if (onclickAttr.includes("part4b") || txt.includes("5-13") || txt.includes("5–13")) {
+          btn.remove();
+        }
+      });
+    }
+
+    function cleanUploadTabExtras() {
+      const panel = document.getElementById("panel-upload-docs");
+      if (!panel) return;
+
+      const hideSelectors = [
+        "#copyPasteList",
+        ".copy-row",
+        ".copy-val",
+        ".info-box",
+        ".note-box",
+        ".helper-text",
+        ".tab-info"
+      ];
+      hideSelectors.forEach((sel) => {
+        panel.querySelectorAll(sel).forEach((el) => {
+          el.innerHTML = "";
+          el.style.display = "none";
+        });
+      });
+    }
+
+    function openTab(panelId, btnEl) {
+      if (panelId === "part4b") panelId = "part4a";
+      removePart4bTabIfPresent();
+
+      document.querySelectorAll(".section-panel").forEach((p) => {
+        if (p.id !== "settingsBox") p.classList.remove("active");
+      });
+      document.querySelectorAll(".tab-btn").forEach((b) => b.classList.remove("active"));
+
+      const targetPanel = document.getElementById(panelId);
+      if (targetPanel) targetPanel.classList.add("active");
+
+      const tabButtons = document.querySelectorAll(".tab-btn");
+      if (btnEl && btnEl.classList && btnEl.classList.contains("tab-btn")) {
+        btnEl.classList.add("active");
+      } else if (panelId in TAB_PANEL_MAP && tabButtons[TAB_PANEL_MAP[panelId]]) {
+        tabButtons[TAB_PANEL_MAP[panelId]].classList.add("active");
+      }
+
+      if (panelId === "panel-upload-docs") {
+        cleanUploadTabExtras();
+        ensureEmployeeDownloadButtons();
+        renderPhotoAndDocCards();
+        if (adminUnlocked) {
+          renderAdminEmployeeDropdown();
+          renderAllEmployeesSummary();
+        }
+      }
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function openAdminPanel() {
+      openTab("panel-upload-docs");
+      if (!adminUnlocked) unlockAdminView();
+    }
+
+    async function unlockAdminView() {
+      const entered = prompt("Enter Creator/Admin PIN (Default: 2026):");
+      if (entered !== getAdminPin()) {
+        if (entered !== null) alert("Incorrect Admin PIN!");
+        return;
+      }
+
+      adminUnlocked = true;
+      const lockedBox = document.getElementById("adminLockedBox");
+      const unlockedBox = document.getElementById("adminUnlockedBox");
+      if (lockedBox) lockedBox.style.display = "none";
+      if (unlockedBox) unlockedBox.style.display = "block";
+
+      const gasUrl = getActiveGasUrl();
+      if (gasUrl && gasUrl.startsWith("https://script.google.com/macros/s/")) {
+        try {
+          const res = await fetch(gasUrl);
+          const json = await res.json();
+          if (json && Array.isArray(json.records) && json.records.length > 0) {
+            localStorage.setItem("hrms_all_employees_v1", JSON.stringify(json.records));
+            loadEmployeeIntoForm(json.records[json.records.length - 1]);
+          }
+        } catch (e) {}
+      }
+
+      cleanUploadTabExtras();
+      renderAdminEmployeeDropdown();
+      renderPhotoAndDocCards();
+      renderAllEmployeesSummary();
+    }
+
+    function loadEmployeeIntoForm(data) {
+      if (!data) return;
+      Object.keys(data).forEach((k) => {
+        if (k.startsWith("_") || k.endsWith("[]")) return;
+        const el = document.querySelector(`[name="${k}"]`);
+        if (el) el.value = data[k];
+      });
+
+      if (data._empPhoto) {
+        photoStore.emp = data._empPhoto;
+        const prev = document.getElementById("empPhotoPreview");
+        if (prev) prev.innerHTML = `<img src="${data._empPhoto}" alt="Employee Photo">`;
+      }
+      if (data._famPhoto) {
+        photoStore.fam = data._famPhoto;
+        const fprev = document.getElementById("famPhotoPreview");
+        if (fprev) fprev.innerHTML = `<img src="${data._famPhoto}" alt="Family Photo">`;
+      }
+      if (data._docs && typeof data._docs === "object") {
+        docStore = Object.assign(
+          { sslc_doc: null, puc_doc: null, degree_doc: null, other_docs: [] },
+          data._docs
+        );
+      }
+    }
+
+    function renderAdminEmployeeDropdown() {
+      const box = document.getElementById("adminUnlockedBox");
+      if (!box) return;
+
+      const list = getAllEmployeesList();
+      let select = document.getElementById("adminEmployeeSelect");
+
+      if (!select) {
+        const wrap = document.createElement("div");
+        wrap.style.cssText = "margin-bottom:10px;padding:8px;background:#f1f5f9;border:1px solid #cbd5e1;border-radius:6px;display:flex;flex-wrap:wrap;gap:8px;align-items:center;";
+        wrap.innerHTML = `
+          <label for="adminEmployeeSelect" style="font-weight:700;font-size:0.82rem;">Select Employee:</label>
+          <select id="adminEmployeeSelect" style="padding:6px 8px;border-radius:4px;border:1px solid #94a3b8;min-width:220px;"></select>
+        `;
+        box.insertBefore(wrap, box.firstChild);
+        select = document.getElementById("adminEmployeeSelect");
+        select.addEventListener("change", () => {
+          const idx = Number(select.value);
+          const records = getAllEmployeesList();
+          if (!isNaN(idx) && records[idx]) {
+            loadEmployeeIntoForm(records[idx]);
+            renderPhotoAndDocCards();
+          }
+        });
+      }
+
+      select.innerHTML = "";
+      if (!list.length) {
+        const opt = document.createElement("option");
+        opt.value = "";
+        opt.textContent = "No submitted employees yet";
+        select.appendChild(opt);
+        return;
+      }
+
+      list.forEach((rec, i) => {
+        const opt = document.createElement("option");
+        opt.value = String(i);
+        const namePart = rec.emp_name_en || rec.emp_name_kn || "Unnamed";
+        const kgidPart = rec.kgid_no ? ` (${rec.kgid_no})` : "";
+        opt.textContent = `${i + 1}. ${namePart}${kgidPart}`;
+        select.appendChild(opt);
+      });
+
+      select.value = String(list.length - 1);
+    }
+
+    // English -> Kannada Transliteration
+    function handleTransliterate(inputEl) {
+      const targetName = inputEl.getAttribute("data-kn-target");
+      if (!targetName) return;
+      const targetEl = document.querySelector(`[name="${targetName}"]`);
+      if (!targetEl) return;
+      clearTimeout(translitTimers[targetName]);
+      const text = inputEl.value.trim();
+      if (!text) {
+        targetEl.value = "";
+        return;
+      }
+
+      targetEl.value = offlinePhoneticKannada(text);
+
+      translitTimers[targetName] = setTimeout(() => {
+        transliterateToKannada(text, targetName, (knResult) => {
+          if (knResult && inputEl.value.trim() === text) {
+            targetEl.value = knResult;
+          }
+        });
+      }, 220);
+    }
+
+    function transliterateToKannada(text, targetName, callback) {
+      const cbName = "kn_cb_" + targetName + "_" + Math.floor(Math.random() * 1000000);
+      let done = false;
+      const script = document.createElement("script");
+      const timer = setTimeout(() => {
+        if (!done) {
+          done = true;
+          cleanup();
+          callback(offlinePhoneticKannada(text));
+        }
+      }, 1800);
+
+      function cleanup() {
+        clearTimeout(timer);
+        delete window[cbName];
+        if (script.parentNode) script.parentNode.removeChild(script);
+      }
+
+      window[cbName] = function (data) {
+        if (done) return;
+        done = true;
+        cleanup();
+        if (Array.isArray(data) && data[0] === "SUCCESS" && data[1] && data[1][0] && data[1][0][1] && data[1][0][1][0]) {
+          callback(data[1][0][1][0]);
+        } else {
+          callback(offlinePhoneticKannada(text));
+        }
+      };
+
+      script.src = `https://inputtools.google.com/request?text=${encodeURIComponent(text)}&itc=kn-t-i0-und&num=1&cp=0&cs=1&ie=utf-8&oe=utf-8&callback=${cbName}`;
+      script.onerror = function () {
+        if (!done) {
+          done = true;
+          cleanup();
+          callback(offlinePhoneticKannada(text));
+        }
+      };
+      document.body.appendChild(script);
+    }
+
+    function offlinePhoneticKannada(str) {
+      return str.split(/(\s+)/).map((w) => (/^\s+$/.test(w) ? w : transliterateWordKannada(w))).join("");
+    }
+
+    function transliterateWordKannada(word) {
+      const w = word.toLowerCase();
+      const vowels = { a: "ಅ", aa: "ಆ", i: "ಇ", ee: "ಈ", u: "ಉ", oo: "ಊ", ru: "ಋ", e: "ಎ", ae: "ಏ", ai: "ಐ", o: "ಒ", au: "ಔ", ou: "ಔ" };
+      const matras = { a: "", aa: "ಾ", i: "ಿ", ee: "ೀ", u: "ು", oo: "ೂ", ru: "ೃ", e: "ೆ", ae: "ೇ", ai: "ೈ", o: "ೊ", au: "ೌ", ou: "ೌ" };
+      const virama = "್";
+      const cons = [
+        ["ksh", "ಕ್ಷ"], ["jnj", "ಜ್ಞ"], ["sh", "ಶ"], ["ch", "ಚ"], ["th", "ಥ"], ["dh", "ಧ"], ["bh", "ಭ"], ["ph", "ಫ"], ["kh", "ಖ"], ["gh", "ಘ"],
+        ["k", "ಕ"], ["g", "ಗ"], ["c", "ಕ"], ["j", "ಜ"], ["t", "ಟ"], ["d", "ಡ"], ["n", "ನ"], ["p", "ಪ"], ["b", "ಬ"], ["m", "ಮ"],
+        ["y", "ಯ"], ["r", "ರ"], ["l", "ಲ"], ["v", "ವ"], ["w", "ವ"], ["s", "ಸ"], ["h", "ಹ"]
+      ];
+      const vowelKeys = Object.keys(vowels).sort((a, b) => b.length - a.length);
+      let out = "", i = 0, lastWasConsonant = false;
+
+      while (i < w.length) {
+        let matchedCons = cons.find(([k]) => w.startsWith(k, i));
+        if (matchedCons) {
+          if (lastWasConsonant) out += virama;
+          out += matchedCons[1];
+          i += matchedCons[0].length;
+          lastWasConsonant = true;
+          continue;
+        }
+        let matchedVowel = vowelKeys.find((vk) => w.startsWith(vk, i));
+        if (matchedVowel) {
+          out += lastWasConsonant ? matras[matchedVowel] : vowels[matchedVowel];
+          lastWasConsonant = false;
+          i += matchedVowel.length;
+          continue;
+        }
+        if (lastWasConsonant) { out += virama; lastWasConsonant = false; }
+        out += w[i++];
+      }
+      if (lastWasConsonant) out += virama;
+      return out;
+    }
+
+    function autoFillDobWords(val) {
+      if (!val) return;
+      const [y, m, d] = val.split("-").map(Number);
+      const months = ["", "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+      const el = document.querySelector('[name="dob_words"]');
+      if (el) el.value = `${d} ${months[m]} ${y}`;
+    }
+
+    // Photo & Document compression <= 100 KB (.jpg)
+    function compressImageTo100KB(imgSource, targetKey) {
+      const canvas = document.createElement("canvas");
+      let width = imgSource.width || imgSource.videoWidth || 800;
+      let height = imgSource.height || imgSource.videoHeight || 600;
+      const maxDim = targetKey === "emp" ? 600 : 1200;
+      if (width > maxDim || height > maxDim) {
+        if (width > height) {
+          height = Math.round((height * maxDim) / width);
+          width = maxDim;
+        } else {
+          width = Math.round((width * maxDim) / height);
+          height = maxDim;
+        }
+      }
+      canvas.width = width;
+      canvas.height = height;
+      const ctx = canvas.getContext("2d");
+      ctx.fillStyle = "#ffffff";
+      ctx.fillRect(0, 0, width, height);
+      ctx.drawImage(imgSource, 0, 0, width, height);
+
+      let quality = 0.88;
+      let dataUrl = canvas.toDataURL("image/jpeg", quality);
+      while (Math.round((dataUrl.length * 3) / 4) > 98 * 1024 && quality > 0.15) {
+        quality -= 0.07;
+        dataUrl = canvas.toDataURL("image/jpeg", quality);
+      }
+      const kbSize = (Math.round((dataUrl.length * 3) / 4) / 1024).toFixed(1);
+
+      if (targetKey === "emp" || targetKey === "fam") {
+        photoStore[targetKey] = dataUrl;
+        const previewEl = document.getElementById(targetKey === "emp" ? "empPhotoPreview" : "famPhotoPreview");
+        const metaEl = document.getElementById(targetKey === "emp" ? "empPhotoMeta" : "famPhotoMeta");
+        if (previewEl) previewEl.innerHTML = `<img src="${dataUrl}" alt="Photo">`;
+        if (metaEl) {
+          metaEl.style.display = "inline-block";
+          metaEl.textContent = `Ready: ${kbSize} KB (.JPG)`;
+        }
+      } else {
+        const baseName = getEmployeeFileBaseName();
+        docStore[targetKey] = {
+          name: `${baseName}_${targetKey}.jpg`,
+          type: "image/jpeg",
+          dataUrl
+        };
+        const meta = document.getElementById("meta_" + targetKey);
+        if (meta) {
+          meta.style.display = "inline-block";
+          meta.textContent = `Captured: ${kbSize} KB (.JPG)`;
+        }
+      }
+      renderPhotoAndDocCards();
+    }
+
+    function processImageFile(event, targetKey) {
+      const file = event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const img = new Image();
+        img.onload = () => compressImageTo100KB(img, targetKey);
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    async function openCamera(targetKey, preferredFacing = null) {
+      activeCamTarget = targetKey;
+      activeCamFacing = preferredFacing || (targetKey === "emp" ? "user" : "environment");
+
+      const modal = document.getElementById("cameraModal");
+      if (!modal) return;
+      modal.classList.add("open");
+      await startCameraStream(activeCamFacing);
+    }
+
+    async function switchCameraFacing() {
+      activeCamFacing = activeCamFacing === "user" ? "environment" : "user";
+      await startCameraStream(activeCamFacing);
+    }
+
+    async function startCameraStream(facingMode) {
+      const video = document.getElementById("cameraStream");
+      if (!video) return;
+      if (mediaStream) {
+        mediaStream.getTracks().forEach((t) => t.stop());
+        mediaStream = null;
+      }
+      try {
+        mediaStream = await navigator.mediaDevices.getUserMedia({
+          video: {
+            facingMode: { ideal: facingMode },
+            width: { ideal: 1280 },
+            height: { ideal: 720 }
+          },
+          audio: false
+        });
+        video.srcObject = mediaStream;
+        await video.play();
+      } catch (err) {
+        try {
+          mediaStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
+          video.srcObject = mediaStream;
+          await video.play();
+        } catch (err2) {
+          alert("Camera unavailable. Please allow camera permission or use Upload.");
+        }
+      }
+    }
+
+    function snapCameraPhoto() {
+      const video = document.getElementById("cameraStream");
+      if (video) compressImageTo100KB(video, activeCamTarget);
+      closeCamera();
+    }
+
+    function closeCamera() {
+      const modal = document.getElementById("cameraModal");
+      if (modal) modal.classList.remove("open");
+      if (mediaStream) {
+        mediaStream.getTracks().forEach((t) => t.stop());
+        mediaStream = null;
+      }
+    }
+
+    function handleDocUpload(event, key) {
+      const file = event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        docStore[key] = { name: file.name, type: file.type, dataUrl: e.target.result };
+        const meta = document.getElementById("meta_" + key);
+        if (meta) {
+          meta.style.display = "inline-block";
+          meta.textContent = `Uploaded: ${file.name} (${(file.size / 1024).toFixed(1)} KB)`;
+        }
+        renderPhotoAndDocCards();
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function addOtherDocSlot() {
+      const list = document.getElementById("otherDocsList");
+      if (!list) return;
+      const slotKey = "other_doc_" + (list.children.length + 1) + "_" + Date.now();
+      const div = document.createElement("div");
+      div.dataset.slotKey = slotKey;
+      div.style.cssText = "display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:8px;padding:8px;background:#fff;border:1px solid #e2e8f0;border-radius:6px;";
+      div.innerHTML = `
+        <input type="text" placeholder="Document Title" style="max-width:220px;" onchange="syncOtherDocs()">
+        <input type="file" accept="image/*,.pdf" style="max-width:210px;" onchange="attachOtherDocFile(this)">
+        <button type="button" class="btn btn-primary btn-sm" onclick="openCamera('${div.dataset.slotKey}', 'environment')">Rear Cam</button>
+        <button type="button" class="btn btn-dark btn-sm" onclick="openCamera('${div.dataset.slotKey}', 'user')">Front Cam</button>
+        <span class="badge-kb" style="display:none;"></span>
+        <button type="button" class="btn btn-danger btn-sm" onclick="this.parentElement.remove();syncOtherDocs();">Remove</button>
+      `;
+      list.appendChild(div);
+    }
+
+    function attachOtherDocFile(inputEl) {
+      const file = inputEl.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        inputEl.dataset.fileName = file.name;
+        inputEl.dataset.fileData = e.target.result;
+        const badge = inputEl.parentElement.querySelector(".badge-kb");
+        if (badge) {
+          badge.style.display = "inline-block";
+          badge.textContent = `${file.name} (${(file.size / 1024).toFixed(1)} KB)`;
+        }
+        syncOtherDocs();
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function syncOtherDocs() {
+      const arr = [];
+      document.querySelectorAll("#otherDocsList > div").forEach((row) => {
+        const title = row.querySelector('input[type="text"]')?.value || "Other Document";
+        const fileInput = row.querySelector('input[type="file"]');
+        const slotKey = row.dataset.slotKey;
+        if (fileInput?.dataset.fileData) {
+          arr.push({ title, name: fileInput.dataset.fileName, dataUrl: fileInput.dataset.fileData });
+        } else if (slotKey && docStore[slotKey]?.dataUrl) {
+          arr.push({ title, name: docStore[slotKey].name, dataUrl: docStore[slotKey].dataUrl });
+        }
+      });
+      docStore.other_docs = arr;
+    }
+
+    function addEduRow(data = {}) {
+      const c = document.getElementById("eduContainer");
+      if (!c) return;
+      const idx = c.children.length + 1;
+      const div = document.createElement("div");
+      div.className = "repeat-item";
+      div.innerHTML = `
+        <div class="repeat-head"><span>Qualification #${idx}</span><button type="button" class="btn btn-danger btn-sm no-print" onclick="this.closest('.repeat-item').remove()">Remove</button></div>
+        <table class="esr-table">
+          <tr>
+            <td><input type="text" name="edu_course[]" placeholder="Course (SSLC/PUC/Degree/D.Ed/B.Ed/PG)" value="${data.course || ""}"></td>
+            <td><input type="text" name="edu_type_mode[]" placeholder="Course Type, Mode & Year of Passing"></td>
+            <td><input type="text" name="edu_reg_langs[]" placeholder="Reg. No. & Languages 1, 2, 3"></td>
+          </tr>
+          <tr>
+            <td><input type="text" name="edu_subj_med[]" placeholder="Core Subjects & Medium"></td>
+            <td><input type="text" name="edu_marks_board[]" placeholder="% Marks, State & Board/University"></td>
+            <td><input type="text" name="edu_cert_no[]" placeholder="Certificate Number"></td>
+          </tr>
+        </table>`;
+      c.appendChild(div);
+    }
+
+    function addExamRow() {
+      const c = document.getElementById("examContainer");
+      if (!c) return;
+      const idx = c.children.length + 1;
+      const div = document.createElement("div");
+      div.className = "repeat-item";
+      div.innerHTML = `
+        <div class="repeat-head"><span>Departmental Exam / Training #${idx}</span><button type="button" class="btn btn-danger btn-sm no-print" onclick="this.closest('.repeat-item').remove()">Remove</button></div>
+        <table class="esr-table">
+          <tr>
+            <td><input type="text" name="exam_name[]" placeholder="Exam / Training Program Name & In/By"></td>
+            <td><input type="text" name="exam_date_reg[]" placeholder="Year, Session, Date of Passing & Reg. No."></td>
+            <td><input type="text" name="exam_cert_inst[]" placeholder="Certificate No., Cadre & Institution"></td>
+          </tr>
+        </table>`;
+      c.appendChild(div);
+    }
+
+    function addFamilyRow() {
+      const c = document.getElementById("familyContainer");
+      if (!c) return;
+      const idx = c.children.length + 1;
+      const div = document.createElement("div");
+      div.className = "repeat-item";
+      div.innerHTML = `
+        <div class="repeat-head"><span>Family Member #${idx}</span><button type="button" class="btn btn-danger btn-sm no-print" onclick="this.closest('.repeat-item').remove()">Remove</button></div>
+        <table class="esr-table">
+          <tr>
+            <td><input type="text" name="fam_rel_name[]" placeholder="Relation & Family Member Name"></td>
+            <td><input type="text" name="fam_gen_dob[]" placeholder="Gender, DOB & Dependent/Pensioner"></td>
+            <td><input type="text" name="fam_work_inc[]" placeholder="Working In, Annual Income & Disability %"></td>
+          </tr>
+          <tr>
+            <td colspan="3"><input type="text" name="fam_addr_mob[]" placeholder="Address, District, Taluka, Village, Pincode, Mobile & Email"></td>
+          </tr>
+        </table>`;
+      c.appendChild(div);
+    }
+
+    function addNomineeRow() {
+      const c = document.getElementById("nomineeContainer");
+      if (!c) return;
+      const idx = c.children.length + 1;
+      const div = document.createElement("div");
+      div.className = "repeat-item";
+      div.innerHTML = `
+        <div class="repeat-head"><span>Nomination #${idx}</span><button type="button" class="btn btn-danger btn-sm no-print" onclick="this.closest('.repeat-item').remove()">Remove</button></div>
+        <table class="esr-table">
+          <tr>
+            <td><input type="text" name="nom_for_pol[]" placeholder="Nomination For, Policy No., Form Type & Share %"></td>
+            <td><input type="text" name="nom_member_rel[]" placeholder="Family Member Name, Relation, Gender & DOB"></td>
+            <td><input type="text" name="nom_date_inv[]" placeholder="Date of Nomination & Invalid If Condition"></td>
+          </tr>
+          <tr>
+            <td colspan="3"><input type="text" name="nom_addr_alt[]" placeholder="Nominee Address/District/Taluka/Pincode/Mobile & Alternative Nominee"></td>
+          </tr>
+        </table>`;
+      c.appendChild(div);
+    }
+
+    function addPromoRow() {
+      const c = document.getElementById("promoContainer");
+      if (!c) return;
+      const idx = c.children.length + 1;
+      const div = document.createElement("div");
+      div.className = "repeat-item";
+      div.innerHTML = `
+        <div class="repeat-head"><span>Service / Pay Record #${idx}</span><button type="button" class="btn btn-danger btn-sm no-print" onclick="this.closest('.repeat-item').remove()">Remove</button></div>
+        <table class="esr-table">
+          <tr>
+            <td><input type="text" name="promo_type_dt[]" placeholder="Type (Appointment/Promotion/Increment) & Effective Date"></td>
+            <td><input type="text" name="promo_before[]" placeholder="Before: Dept, District, Group, Payscale & Basic Pay"></td>
+            <td><input type="text" name="promo_after[]" placeholder="After: Dept, District, Group, New Payscale & New Basic"></td>
+          </tr>
+          <tr>
+            <td colspan="3"><input type="text" name="promo_inc_ord[]" placeholder="Additional/Stagnation Inc., Personal Pay, Next Inc. Date, Order No/Date"></td>
+          </tr>
+        </table>`;
+      c.appendChild(div);
+    }
+
+    function collectFormData() {
+      syncOtherDocs();
+      const formEl = document.getElementById("esrForm");
+      const data = {};
+      if (formEl) {
+        const fd = new FormData(formEl);
+        for (const [k, v] of fd.entries()) {
+          if (k.endsWith("[]")) {
+            if (!data[k]) data[k] = [];
+            data[k].push(v);
+          } else {
+            data[k] = v;
+          }
+        }
+      }
+      data._boardTitle = document.querySelector(".board-title")?.innerText.trim() || "";
+      data._boardSubtitle = document.querySelector(".board-subtitle")?.innerText.trim() || "";
+      data._empPhoto = photoStore.emp;
+      data._famPhoto = photoStore.fam;
+      data._docs = docStore;
+      data._submittedAt = new Date().toISOString();
+      return data;
+    }
+
+    function renderPhotoAndDocCards() {
+      const photoDiv = document.getElementById("photoDownloadCards");
+      if (!photoDiv) return;
+      const data = collectFormData();
+      const baseName = getEmployeeFileBaseName(data);
+      let photoHtml = "";
+
+      if (photoStore.emp) {
+        photoHtml += `<div style="border:1px solid #cbd5e1;padding:8px;border-radius:6px;text-align:center;background:#f8fafc;">
+          <img src="${photoStore.emp}" style="width:90px;height:110px;object-fit:cover;border-radius:4px;"><br>
+          <a href="${photoStore.emp}" download="${baseName}_Photo.jpg" class="btn btn-success btn-sm" style="margin-top:6px;">Download Photo (.jpg)</a>
+        </div>`;
+      }
+      if (photoStore.fam) {
+        photoHtml += `<div style="border:1px solid #cbd5e1;padding:8px;border-radius:6px;text-align:center;background:#f8fafc;">
+          <img src="${photoStore.fam}" style="width:120px;height:110px;object-fit:cover;border-radius:4px;"><br>
+          <a href="${photoStore.fam}" download="${baseName}_Family.jpg" class="btn btn-success btn-sm" style="margin-top:6px;">Download Family (.jpg)</a>
+        </div>`;
+      }
+
+      Object.keys(docStore).forEach((dk) => {
+        if (dk === "other_docs") return;
+        const item = docStore[dk];
+        if (item && item.dataUrl) {
+          const ext = (item.name && item.name.split(".").pop()) || "jpg";
+          photoHtml += `<div style="border:1px solid #cbd5e1;padding:8px;border-radius:6px;text-align:center;background:#f8fafc;">
+            <div style="font-weight:800;font-size:0.75rem;margin-bottom:6px;">${escapeXml(dk.toUpperCase())}</div>
+            <a href="${item.dataUrl}" download="${baseName}_${dk}.${ext}" class="btn btn-primary btn-sm">Download ${escapeXml(dk)}</a>
+          </div>`;
+        }
+      });
+
+      (docStore.other_docs || []).forEach((od, idx) => {
+        if (od && od.dataUrl) {
+          const ext = (od.name && od.name.split(".").pop()) || "jpg";
+          photoHtml += `<div style="border:1px solid #cbd5e1;padding:8px;border-radius:6px;text-align:center;background:#f8fafc;">
+            <div style="font-weight:800;font-size:0.75rem;margin-bottom:6px;">${escapeXml(od.title || "DOC_" + (idx + 1))}</div>
+            <a href="${od.dataUrl}" download="${baseName}_Doc_${idx + 1}.${ext}" class="btn btn-primary btn-sm">Download Doc ${idx + 1}</a>
+          </div>`;
+        }
+      });
+
+      photoDiv.innerHTML = photoHtml;
+    }
+
+    // Valid SpreadsheetML (.xls) XML so Excel opens cleanly without "corrupted file" warning
+    function buildSpreadsheetXml(sheetName, rowsArray) {
+      const xmlRows = rowsArray
+        .map((cells, rIdx) => {
+          const isHeader = rIdx === 0;
+          const styleId = isHeader ? ' ss:StyleID="Header"' : ' ss:StyleID="Cell"';
+          const xmlCells = cells
+            .map((val) => {
+              const safeVal = escapeXml(Array.isArray(val) ? val.join(" | ") : (val ?? ""));
+              return `<Cell${styleId}><Data ss:Type="String">${safeVal}</Data></Cell>`;
+            })
+            .join("");
+          return `<Row>${xmlCells}</Row>`;
+        })
+        .join("");
+
+      return `<?xml version="1.0" encoding="UTF-8"?>
+<?mso-application progid="Excel.Sheet"?>
+<Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet"
+          xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet">
+  <Styles>
+    <Style ss:ID="Default" ss:Name="Normal">
+      <Alignment ss:Vertical="Center" ss:WrapText="1"/>
+      <Font ss:FontName="Arial" ss:Size="10"/>
+    </Style>
+    <Style ss:ID="Header">
+      <Alignment ss:Horizontal="Center" ss:Vertical="Center" ss:WrapText="1"/>
+      <Font ss:FontName="Arial" ss:Size="10" ss:Bold="1" ss:Color="#FFFFFF"/>
+      <Interior ss:Color="#1E3A8A" ss:Pattern="Solid"/>
+      <Borders>
+        <Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="1"/>
+        <Border ss:Position="Left" ss:LineStyle="Continuous" ss:Weight="1"/>
+        <Border ss:Position="Right" ss:LineStyle="Continuous" ss:Weight="1"/>
+        <Border ss:Position="Top" ss:LineStyle="Continuous" ss:Weight="1"/>
+      </Borders>
+    </Style>
+    <Style ss:ID="Cell">
+      <Alignment ss:Vertical="Center" ss:WrapText="1"/>
+      <Font ss:FontName="Arial" ss:Size="10"/>
+      <Borders>
+        <Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="1"/>
+        <Border ss:Position="Left" ss:LineStyle="Continuous" ss:Weight="1"/>
+        <Border ss:Position="Right" ss:LineStyle="Continuous" ss:Weight="1"/>
+        <Border ss:Position="Top" ss:LineStyle="Continuous" ss:Weight="1"/>
+      </Borders>
+    </Style>
+  </Styles>
+  <Worksheet ss:Name="${escapeXml(sheetName.slice(0, 31))}">
+    <Table>
+      ${xmlRows}
+    </Table>
+  </Worksheet>
+</Workbook>`;
+    }
+
+    function downloadEmployeeExcel(customData = null) {
+      const rec = customData || collectFormData();
+      if (!rec.emp_name_en && !rec.emp_name_kn && !rec.kgid_no) {
+        alert("Please enter Employee Name and KGID first.");
+        return;
+      }
+
+      const baseName = getEmployeeFileBaseName(rec);
+      const keys = Object.keys(rec).filter((k) => !k.startsWith("_"));
+      const tableRows = [
+        ["Field Name", "Entered Details"],
+        ...keys.map((k) => [formatFieldLabel(k), rec[k]])
+      ];
+
+      const xmlContent = buildSpreadsheetXml("ESR_Record", tableRows);
+      const blob = new Blob([xmlContent], { type: "application/vnd.ms-excel;charset=utf-8" });
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = `${baseName}.xls`;
+      a.click();
+      setTimeout(() => URL.revokeObjectURL(a.href), 1500);
+    }
+
+    function downloadEmployeePDF(customData = null) {
+      const rec = customData || collectFormData();
+      if (!rec.emp_name_en && !rec.emp_name_kn && !rec.kgid_no) {
+        alert("Please enter Employee Name and KGID first.");
+        return;
+      }
+      const baseName = getEmployeeFileBaseName(rec);
+      const prevTitle = document.title;
+      document.title = baseName;
+      window.print();
+      setTimeout(() => {
+        document.title = prevTitle;
+      }, 1000);
+    }
+
+    function ensureEmployeeDownloadButtons() {
+      const panel = document.getElementById("panel-upload-docs");
+      if (!panel || document.getElementById("empDownloadActionsBar")) return;
+
+      const bar = document.createElement("div");
+      bar.id = "empDownloadActionsBar";
+      bar.style.cssText = "display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px;";
+
+      const pdfBtn = document.createElement("button");
+      pdfBtn.type = "button";
+      pdfBtn.className = "btn btn-success btn-sm";
+      pdfBtn.textContent = "Download PDF (<Name>_<KGID>.pdf)";
+      pdfBtn.onclick = () => downloadEmployeePDF();
+
+      const xlsBtn = document.createElement("button");
+      xlsBtn.type = "button";
+      xlsBtn.className = "btn btn-primary btn-sm";
+      xlsBtn.textContent = "Download Excel (<Name>_<KGID>.xls)";
+      xlsBtn.onclick = () => downloadEmployeeExcel();
+
+      bar.appendChild(pdfBtn);
+      bar.appendChild(xlsBtn);
+      panel.insertBefore(bar, panel.firstChild);
+    }
+
+    function getAllEmployeesList() {
+      try {
+        return JSON.parse(localStorage.getItem("hrms_all_employees_v1") || "[]");
+      } catch (e) {
+        return [];
+      }
+    }
+
+    function saveCurrentToAllEmployees() {
+      if (!adminUnlocked) {
+        alert("Admin access required.");
+        return;
+      }
+      const rec = collectFormData();
+      if (!rec.emp_name_en && !rec.kgid_no) {
+        alert("Enter Employee Name or KGID first.");
+        return;
+      }
+      const list = getAllEmployeesList();
+      const idx = list.findIndex(
+        (item) =>
+          (rec.kgid_no && item.kgid_no === rec.kgid_no) ||
+          (rec.emp_name_en && item.emp_name_en === rec.emp_name_en)
+      );
+      if (idx > -1) list[idx] = rec;
+      else list.push(rec);
+      localStorage.setItem("hrms_all_employees_v1", JSON.stringify(list));
+      renderAdminEmployeeDropdown();
+      renderAllEmployeesSummary();
+      alert(`Saved record for ${getEmployeeFileBaseName(rec)}. Total: ${list.length}`);
+    }
+
+    function renderAllEmployeesSummary() {
+      const list = getAllEmployeesList();
+      const el = document.getElementById("allEmployeesSummary");
+      if (el) el.textContent = `Stored Employees: ${list.length}`;
+    }
+
+    function downloadAllEmployeesCSV() {
+      if (!adminUnlocked) {
+        alert("Admin access required.");
+        return;
+      }
+      const list = getAllEmployeesList();
+      if (!list.length) list.push(collectFormData());
+
+      const allKeys = Array.from(new Set(list.flatMap((r) => Object.keys(r).filter((k) => !k.startsWith("_")))));
+      const rows = [
+        ["Sl. No", ...allKeys.map(formatFieldLabel)],
+        ...list.map((rec, i) => [i + 1, ...allKeys.map((k) => rec[k])])
+      ];
+
+      const xmlContent = buildSpreadsheetXml("All_Employees_ESR", rows);
+      const blob = new Blob([xmlContent], { type: "application/vnd.ms-excel;charset=utf-8" });
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = `All_Employees_ESR_${new Date().toISOString().slice(0, 10)}.xls`;
+      a.click();
+      setTimeout(() => URL.revokeObjectURL(a.href), 1500);
+    }
+
+    function saveLocalDraft() {
+      localStorage.setItem("karnataka_esr_draft_v3", JSON.stringify(collectFormData()));
+      alert("Draft saved!");
+    }
+
+    function loadLocalDraft() {
+      const raw = localStorage.getItem("karnataka_esr_draft_v3");
+      if (!raw) return;
+      try {
+        const data = JSON.parse(raw);
+        loadEmployeeIntoForm(data);
+      } catch (e) {}
+    }
+
+    function saveSettings() {
+      const urlInput = document.getElementById("gasUrlInput");
+      const pinInput = document.getElementById("adminPinInput");
+      if (urlInput) localStorage.setItem("esr_gas_url", urlInput.value.trim());
+      if (pinInput && pinInput.value.trim()) localStorage.setItem("esr_admin_pin", pinInput.value.trim());
+      alert("Settings saved!");
+    }
+
+    async function submitToGoogleSheet() {
+      const data = collectFormData();
+      if (!data.emp_name_en && !data.emp_name_kn) {
+        alert("Please enter employee name first.");
+        return;
+      }
+
+      const list = getAllEmployeesList();
+      const idx = list.findIndex(
+        (item) =>
+          (data.kgid_no && item.kgid_no === data.kgid_no) ||
+          (data.emp_name_en && item.emp_name_en === data.emp_name_en)
+      );
+      if (idx > -1) list[idx] = data;
+      else list.push(data);
+      localStorage.setItem("hrms_all_employees_v1", JSON.stringify(list));
+      localStorage.setItem("karnataka_esr_draft_v3", JSON.stringify(data));
+
+      const gasUrl = getActiveGasUrl();
+      if (!gasUrl || !gasUrl.startsWith("https://script.google.com/macros/s/")) {
+        alert("Saved locally! Use the PDF or Excel buttons to download your file.");
+        return;
+      }
+
+      const btn = document.getElementById("btnCloudSubmit");
+      const origText = btn ? btn.textContent : "";
+      if (btn) {
+        btn.textContent = "Submitting...";
+        btn.disabled = true;
+      }
+
+      try {
+        await fetch(gasUrl, {
+          method: "POST",
+          mode: "no-cors",
+          headers: { "Content-Type": "text/plain;charset=utf-8" },
+          body: JSON.stringify({ action: "submit", record: data })
+        });
+        alert("Submitted! You can now download your PDF or Excel (.xls) file named with your Name and KGID.");
+      } catch (err) {
+        alert("Submission error: " + (err && err.message ? err.message : "Network error"));
+      } finally {
+        if (btn) {
+          btn.textContent = origText;
+          btn.disabled = false;
+        }
+      }
+    }
+
+    function clearAllData() {
+      if (confirm("Clear current form draft?")) {
+        localStorage.removeItem("karnataka_esr_draft_v3");
+        location.reload();
+      }
+    }
+
+    window.addEventListener("DOMContentLoaded", () => {
+      removePart4bTabIfPresent();
+      cleanUploadTabExtras();
+      ensureEmployeeDownloadButtons();
+
+      addEduRow({ course: "SSLC" });
+      addEduRow({ course: "PUC" });
+      addEduRow({ course: "Degree / D.Ed / B.Ed" });
+      addExamRow();
+      addFamilyRow();
+      addNomineeRow();
+      addPromoRow();
+
+      const gasInput = document.getElementById("gasUrlInput");
+      if (gasInput) gasInput.value = getActiveGasUrl();
+      const pinInput = document.getElementById("adminPinInput");
+      if (pinInput) pinInput.value = getAdminPin();
+
+      loadLocalDraft();
+      renderPhotoAndDocCards();
+    });
+  </script>
+</body>
+</html>
